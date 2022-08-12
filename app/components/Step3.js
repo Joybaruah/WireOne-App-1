@@ -31,7 +31,6 @@ const Step3 = ({navigation}) => {
   const dispatch = useDispatch();
 
   const step3 = useSelector(SelectStep3);
-  console.log(step3);
 
   const uploadImage = uri => {
     let options = {

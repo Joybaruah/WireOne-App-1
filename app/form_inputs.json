@@ -1,0 +1,98 @@
+[
+    {
+        "form1_inputs" : [
+            {
+                "label" : "Email",
+                "key" : "email"
+            },
+            {
+                "label" : "Contact",
+                "key" : "contact"
+            },
+            {
+                "label": "Alternative Contact Number",
+                "key": "altContact"
+            },
+            {
+                "label": "Full Name",
+                "key": "fullname"
+            },
+            {
+                "label": "Blood Group",
+                "key": "bloodGroup"
+            },
+            {
+                "label": "Permanent Address",
+                "key": "permAddress"
+            },
+            {
+                "label": "Current Address/Mailing Adress",
+                "key": "mailAddress"
+            },
+            {
+                "label": "PAN Number",
+                "key": "panNumber"
+            },
+            {
+                "label": "Aadhar Number",
+                "key": "aadharNum"
+            },
+            {
+                "label": "Father's Name",
+                "key": "fatherName"
+            },
+            {
+                "label": "Mother's Name",
+                "key": "motherName"
+            },
+            {
+                "label": "Emergency Contact",
+                "key": "emergerncyContact"
+            },
+            {
+                "label": "Relationship with Emergency Contact",
+                "key": "emergContactRelation"
+            },
+            {
+                "label" :"Medical History (If Any)",
+                "key": "medicalHistory"
+            }
+        ]
+    },
+    {
+        "form2_inputs" : [
+            {
+                "label" :"Beneficiary Name",
+                "key": "beneficiaryName"
+            }, 
+            {
+                "label": "Account Number",
+                "key": "accountNumber"
+            },
+            {
+                "label": "IFSC Code",
+                "key": "ifscCode"
+            },
+            {
+                "label": "Bank Name",
+                "key": "bankName"
+            },
+            {
+                "label": "Branch Address",
+                "key": "branchAddress"
+            }
+        ]
+    },
+    {
+        "form3_inputs" : [
+            {
+                "label" :"10th Certificate",
+                "key": "image1"
+            },
+            {
+                "label": "12th Certificate",
+                "key": "image2"
+            }
+        ]
+    }
+]
