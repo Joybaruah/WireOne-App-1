@@ -187,8 +187,6 @@ const Form3 = ({navigation}) => {
       <View style={styles.header}>
         <Text style={styles.headerText}>Bank Details</Text>
       </View>
-      <Formik>
-        {({handleSubmit, values}) => (
           <ScrollView>
             <FlatList
               data={form3_inputs}
@@ -231,8 +229,6 @@ const Form3 = ({navigation}) => {
               <Text style={styles.buttonText}>SUBMIT</Text>
             </TouchableOpacity>
           </ScrollView>
-        )}
-      </Formik>
     </View>
   );
 };

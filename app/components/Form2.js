@@ -73,7 +73,7 @@ const Form2 = ({navigation}) => {
               },
             }),
           );
-          navigation.navigate('Step3');
+          navigation.navigate('form3');
         }}>
         {({
           handleChange,

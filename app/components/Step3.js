@@ -11,7 +11,7 @@ import React, {useEffect, useState} from 'react';
 import {Formik} from 'formik';
 import {launchImageLibrary} from 'react-native-image-picker';
 import {useDispatch, useSelector} from 'react-redux';
-import {SelectStep3, setStep3} from '../redux/formSlice';
+import {SelectStep1, SelectStep2, SelectStep3, setStep3} from '../redux/formSlice';
 import PushNotification from 'react-native-push-notification';
 
 const Step3 = ({navigation}) => {
@@ -31,6 +31,10 @@ const Step3 = ({navigation}) => {
   const dispatch = useDispatch();
 
   const step3 = useSelector(SelectStep3);
+  const step2 = useSelector(SelectStep2);
+  const step1 = useSelector(SelectStep1);
+
+  console.log(step1)
 
   const uploadImage = uri => {
     let options = {

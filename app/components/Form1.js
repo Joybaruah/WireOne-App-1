@@ -52,16 +52,16 @@ const K_OPTIONS = [
   },
   {
     id: '3',
-    item: 'Art'
+    item: 'Art',
   },
   {
-    id: "4",
-    item: 'Music'
+    id: '4',
+    item: 'Music',
   },
   {
     id: '5',
-    item: 'Cooking'
-  }
+    item: 'Cooking',
+  },
 ];
 
 const validationSchema = Yup.object().shape({
@@ -133,7 +133,7 @@ const Form1 = ({navigation}) => {
               gender: genderState,
             }),
           );
-          navigation.navigate("form2")
+          navigation.navigate('form2');
         }}>
         {({
           handleChange,
@@ -143,7 +143,7 @@ const Form1 = ({navigation}) => {
           errors,
           touched,
         }) => (
-          <ScrollView showsVerticalScrollIndicator={false}> 
+          <ScrollView showsVerticalScrollIndicator={false}>
             <FlatList
               data={form1_inputs}
               renderItem={({item}) => {

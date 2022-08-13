@@ -13,7 +13,7 @@ const Stack = createNativeStackNavigator();
 const Home = () => {
   return (
     <Stack.Navigator initialRouteName="Step1">
-      {/* <Stack.Screen name="Step1" component={Step1} options={{
+      <Stack.Screen name="Step1" component={Step1} options={{
         headerShown: false
       }} />
       <Stack.Screen name="Step2" component={Step2} options={{
@@ -21,7 +21,7 @@ const Home = () => {
       }} />
       <Stack.Screen name="Step3" component={Step3} options={{
         headerShown: false
-      }} /> */}
+      }} />
 
       {/* <Stack.Screen
         name="form1"
@@ -36,14 +36,14 @@ const Home = () => {
         options={{
           headerShown: false,
         }}
-      /> */}
+      />
       <Stack.Screen
         name="form3"
         component={Form3}
         options={{
           headerShown: false,
         }}
-      />
+      /> */}
     </Stack.Navigator>
   );
 };
