@@ -1,6 +1,6 @@
 [
     {
-        "form1_inputs" : [
+        "form1Inputs" : [
             {
                 "label" : "Email",
                 "key" : "email"
@@ -60,7 +60,7 @@
         ]
     },
     {
-        "form2_inputs" : [
+        "form2Inputs" : [
             {
                 "label" :"Beneficiary Name",
                 "key": "beneficiaryName"
@@ -84,7 +84,7 @@
         ]
     },
     {
-        "form3_inputs" : [
+        "form3Inputs" : [
             {
                 "label" :"10th Certificate",
                 "key": "image1"

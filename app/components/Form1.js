@@ -1,43 +1,34 @@
 import {
-  ScrollView,
   StyleSheet,
   Text,
   TextInput,
   TouchableOpacity,
   View,
-  Button,
   FlatList,
 } from 'react-native';
-import React, {useState} from 'react';
-import {Formik} from 'formik';
-import RadioForm, {
-  RadioButton,
-  RadioButtonInput,
-  RadioButtonLabel,
-} from 'react-native-simple-radio-button';
+import React, { useEffect, useState } from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Formik } from 'formik';
 import * as Yup from 'yup';
 import SelectBox from 'react-native-multi-selectbox';
-import {xorBy} from 'lodash';
-import {useDispatch, useSelector} from 'react-redux';
-import {SelectStep1, setStep1} from '../redux/formSlice';
+import { xorBy } from 'lodash';
+import { useDispatch } from 'react-redux';
+import RadioButtonRN from 'radio-buttons-react-native';
+import { setStep1 } from '../redux/formSlice';
 import FormInputs from '../form_inputs.json';
 
 const radioButtonsData = [
   {
     label: 'Male',
-    value: 'male',
   },
   {
-    label: 'female',
-    value: 'female',
+    label: 'Female',
   },
   {
     label: 'Prefer not to say',
-    value: 'prefer not to say',
   },
   {
     label: 'Other',
-    value: 'other',
   },
 ];
 
@@ -68,11 +59,11 @@ const validationSchema = Yup.object().shape({
   email: Yup.string()
     .email('Invalid email')
     .required('This is a required question'),
-  contact: Yup.number()
-    .min(10, 'Not a Valid Number')
+  contact: Yup.string()
+    .length(10, 'Not a Valid Number')
     .required('This is a required question'),
-  emergerncyContact: Yup.number()
-    .min(10, 'Not a Valid Number')
+  emergerncyContact: Yup.string()
+    .length(10, 'Not a Valid Number')
     .required('This is a required question'),
   fullname: Yup.string().required('This is a required question'),
   bloodGroup: Yup.string().required('This is a required question'),
@@ -85,47 +76,62 @@ const validationSchema = Yup.object().shape({
   emergContactRelation: Yup.string().required('This is a required question'),
 });
 
-const {form1_inputs} = FormInputs[0];
+const { form1Inputs } = FormInputs[0];
 
-const Form1 = ({navigation}) => {
-  const step1 = useSelector(SelectStep1);
-
-  const [open, setOpen] = useState(false);
-  const [date, setDate] = useState(new Date());
+// eslint-disable-next-line react/prop-types
+const Form1 = ({ navigation }) => {
   const [selectedHobbies, setSelectedHobbies] = useState([]);
+  const [genderState, setGenderState] = useState();
+  // eslint-disable-next-line no-unused-vars
+  const [localValues, setLocalValues] = useState(null);
 
-  const [genderState, setGenderState] = useState(String);
+  useEffect(() => {
+    // eslint-disable-next-line consistent-return
+    const getData = async () => {
+      try {
+        const jsonValue = await AsyncStorage.getItem('formData');
+        return jsonValue != null ? setLocalValues(JSON.parse(jsonValue)) : null;
+      } catch (e) {
+        // error reading value
+      }
+    };
+    getData();
+  }, []);
 
   const dispatch = useDispatch();
 
-  const onMultiChange = () => {
-    return item => setSelectedHobbies(xorBy(selectedHobbies, [item], 'id'));
+  const onMultiChange = () => (item) => setSelectedHobbies(xorBy(selectedHobbies, [item], 'id'));
+
+  // eslint-disable-next-line react/no-unstable-nested-components
+  const FlatlistHeader = () => (
+    <View style={styles.header}>
+      <Text style={styles.headerText}>Employee On-boarding Form</Text>
+    </View>
+  );
+
+  const initialValues = {
+    email: '',
+    contact: '',
+    altContact: '',
+    fullname: '',
+    bloodGroup: '',
+    permAddress: '',
+    mailAddress: '',
+    panNumber: '',
+    aadharNum: '',
+    fatherName: '',
+    motherName: '',
+    emergerncyContact: '',
+    emergContactRelation: '',
+    medicalHistory: '',
   };
 
   return (
     <View style={styles.view}>
-      <View style={styles.header}>
-        <Text style={styles.headerText}>Employee On-boarding Form</Text>
-      </View>
       <Formik
-        initialValues={{
-          email: '',
-          contact: '',
-          altContact: '',
-          fullname: '',
-          bloodGroup: '',
-          permAddress: '',
-          mailAddress: '',
-          panNumber: '',
-          aadharNum: '',
-          fatherName: '',
-          motherName: '',
-          emergerncyContact: '',
-          emergContactRelation: '',
-          medicalHistory: '',
-        }}
+        initialValues={initialValues}
         validationSchema={validationSchema}
-        onSubmit={values => {
+        onSubmit={(values) => {
           dispatch(
             setStep1({
               step_1: values,
@@ -134,7 +140,8 @@ const Form1 = ({navigation}) => {
             }),
           );
           navigation.navigate('form2');
-        }}>
+        }}
+      >
         {({
           handleChange,
           handleBlur,
@@ -143,74 +150,71 @@ const Form1 = ({navigation}) => {
           errors,
           touched,
         }) => (
-          <ScrollView showsVerticalScrollIndicator={false}>
-            <FlatList
-              data={form1_inputs}
-              renderItem={({item}) => {
-                const {key, label} = item;
-                return (
-                  <View style={styles.box}>
-                    <Text style={styles.label}>{label}</Text>
-
-                    <TextInput
-                      onChangeText={handleChange(`${key}`)}
-                      onBlur={handleBlur(`${key}`)}
-                      style={styles.input}
-                      value={values[`${item.key}`]}
-                      placeholder="Your answer"
-                      placeholderTextColor="#3F4E4F"
-                    />
-
-                    {errors[`${item.key}`] && touched[`${item.key}`] ? (
-                      <Text style={styles.errorText}>
-                        {errors[`${item.key}`]}
-                      </Text>
-                    ) : null}
-                  </View>
-                );
-              }}
-            />
-
-            {/* Hobbies */}
-            <View style={styles.box}>
-              <Text style={styles.label}>Hobbies</Text>
-
+          <FlatList
+            data={form1Inputs}
+            ListHeaderComponent={FlatlistHeader}
+            ListFooterComponent={(
               <View>
-                <SelectBox
-                  label="Select Hobbies"
-                  options={K_OPTIONS}
-                  selectedValues={selectedHobbies}
-                  onMultiSelect={onMultiChange()}
-                  onTapClose={onMultiChange()}
-                  isMulti
-                />
+                {/* Hobbies */}
+                <View style={styles.box}>
+                  <Text style={styles.label}>Hobbies</Text>
+
+                  <View>
+                    <SelectBox
+                      listOptionProps={{ nestedScrollEnabled: true }}
+                      label="Select Hobbies"
+                      options={K_OPTIONS}
+                      selectedValues={selectedHobbies}
+                      onMultiSelect={onMultiChange()}
+                      onTapClose={onMultiChange()}
+                      isMulti
+                    />
+                  </View>
+                </View>
+
+                {/* GENDER */}
+                <View style={styles.box}>
+                  <Text style={styles.label}>Gender</Text>
+
+                  <RadioButtonRN
+                    data={radioButtonsData}
+                    initial={4}
+                    circleSize={10}
+                    selectedBtn={(e) => setGenderState(e)}
+                  />
+                </View>
+
+                <TouchableOpacity
+                  onPress={handleSubmit}
+                  title="Submit"
+                  style={styles.button}
+                >
+                  <Text style={styles.buttonText}>NEXT</Text>
+                </TouchableOpacity>
               </View>
-            </View>
+            )}
+            renderItem={({ item }) => {
+              const { key, label } = item;
+              return (
+                <View style={styles.box}>
+                  <Text style={styles.label}>{label}</Text>
 
-            {/* GENDER */}
-            <View style={styles.box}>
-              <Text style={styles.label}>Gender</Text>
+                  <TextInput
+                    onChangeText={handleChange(`${key}`)}
+                    onBlur={handleBlur(`${key}`)}
+                    style={styles.input}
+                    value={values[`${key}`]}
+                    placeholder="Your answer"
+                    placeholderTextColor="#3F4E4F"
+                  />
 
-              <RadioForm
-                radio_props={radioButtonsData}
-                initial={0}
-                onPress={value => {
-                  setGenderState({value});
-                }}
-                buttonColor="#000"
-                selectedButtonColor="#000"
-                style={{padding: 10}}
-                buttonSize={10}
-              />
-            </View>
-
-            <TouchableOpacity
-              onPress={handleSubmit}
-              title="Submit"
-              style={styles.button}>
-              <Text style={styles.buttonText}>NEXT</Text>
-            </TouchableOpacity>
-          </ScrollView>
+                  {errors[`${key}`] && touched[`${key}`] ? (
+                    <Text style={styles.errorText}>{errors[`${key}`]}</Text>
+                  ) : null}
+                </View>
+              );
+            }}
+          />
         )}
       </Formik>
     </View>

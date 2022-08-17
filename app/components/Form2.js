@@ -1,20 +1,18 @@
 import {
   FlatList,
   Image,
-  ScrollView,
   StyleSheet,
   Text,
   TextInput,
   TouchableOpacity,
-  TouchableOpacityBase,
   View,
 } from 'react-native';
-import React, {useState} from 'react';
-import {Formik} from 'formik';
-import {launchImageLibrary} from 'react-native-image-picker';
+import React, { useState } from 'react';
+import { Formik } from 'formik';
+import { launchImageLibrary } from 'react-native-image-picker';
 import * as Yup from 'yup';
-import {useDispatch, useSelector} from 'react-redux';
-import {SelectStep2, setStep2} from '../redux/formSlice';
+import { useDispatch } from 'react-redux';
+import { setStep2 } from '../redux/formSlice';
 import FormInputs from '../form_inputs.json';
 
 const validationSchema = Yup.object().shape({
@@ -25,21 +23,18 @@ const validationSchema = Yup.object().shape({
   branchAddress: Yup.string().required('This is a required question'),
 });
 
-const {form2_inputs} = FormInputs[1];
+const { form2Inputs } = FormInputs[1];
 
-const Form2 = ({navigation}) => {
+const Form2 = ({ navigation }) => {
   const [imageUri, setImageUri] = useState(null);
 
-  const step2 = useSelector(SelectStep2);
-  console.log(step2);
-
   const uploadImage = () => {
-    let options = {
+    const options = {
       mediaType: 'photo',
       quality: 1,
     };
 
-    launchImageLibrary(options, response => {
+    launchImageLibrary(options, (response) => {
       setImageUri(response.assets[0].uri);
     });
   };
@@ -64,7 +59,7 @@ const Form2 = ({navigation}) => {
           branchAddress: '',
         }}
         validationSchema={validationSchema}
-        onSubmit={values => {
+        onSubmit={(values) => {
           dispatch(
             setStep2({
               step_2: values,
@@ -74,7 +69,8 @@ const Form2 = ({navigation}) => {
             }),
           );
           navigation.navigate('form3');
-        }}>
+        }}
+      >
         {({
           handleChange,
           handleBlur,
@@ -83,62 +79,74 @@ const Form2 = ({navigation}) => {
           errors,
           touched,
         }) => (
-          <ScrollView>
-            <FlatList
-              data={form2_inputs}
-              renderItem={({item}) => {
-                const {key, label} = item;
-                return (
-                  <View style={styles.box}>
-                    <Text style={styles.label}>{label}</Text>
+          <FlatList
+            data={form2Inputs}
+            renderItem={({ item }) => {
+              const { key, label } = item;
+              return (
+                <View style={styles.box}>
+                  <Text style={styles.label}>{label}</Text>
 
-                    <TextInput
-                      onChangeText={handleChange(`${key}`)}
-                      onBlur={handleBlur(`${key}`)}
-                      style={styles.input}
-                      value={values[`${item.key}`]}
-                      placeholder="Your answer"
-                      placeholderTextColor="#3F4E4F"
-                    />
+                  <TextInput
+                    onChangeText={handleChange(`${key}`)}
+                    onBlur={handleBlur(`${key}`)}
+                    style={styles.input}
+                    value={values[`${item.key}`]}
+                    placeholder="Your answer"
+                    placeholderTextColor="#3F4E4F"
+                  />
 
-                    {errors[`${item.key}`] && touched[`${item.key}`] ? (
-                      <Text style={styles.errorText}>
-                        {errors[`${item.key}`]}
-                      </Text>
-                    ) : null}
-                  </View>
-                );
-              }}
-            />
-
-            {/* CANCELLED CHEQUE */}
-            <View style={styles.box}>
-              <Text style={styles.label}>Cancelled Cheque</Text>
-
-              {imageUri ? (
-                <View style={{borderWidth: 0.5, marginVertical: 5}}>
-                  <Image source={{uri: imageUri}} style={{height: 50}} />
+                  {errors[`${item.key}`] && touched[`${item.key}`] ? (
+                    <Text style={styles.errorText}>
+                      {errors[`${item.key}`]}
+                    </Text>
+                  ) : null}
                 </View>
-              ) : (
-                <TouchableOpacity style={styles.button2} onPress={uploadImage}>
-                  <Text style={styles.buttonText2}>ADD FILE</Text>
-                </TouchableOpacity>
-              )}
+              );
+            }}
+            ListFooterComponent={(
+              <View>
+                <View style={styles.box}>
+                  <Text style={styles.label}>Cancelled Cheque</Text>
+                  {imageUri ? (
+                    <View style={{ borderWidth: 0.5, marginVertical: 5 }}>
+                      <Image
+                        source={{ uri: imageUri }}
+                        style={{ height: 50 }}
+                      />
+                    </View>
+                  ) : (
+                    <TouchableOpacity
+                      style={styles.button2}
+                      onPress={uploadImage}
+                    >
+                      <Text style={styles.buttonText2}>ADD FILE</Text>
+                    </TouchableOpacity>
+                  )}
+                  {imageUri ? (
+                    <TouchableOpacity
+                      style={styles.button2}
+                      onPress={removeImage}
+                    >
+                      <Text style={styles.buttonText2}>REMOVE</Text>
+                    </TouchableOpacity>
+                  ) : null}
 
-              {imageUri ? (
-                <TouchableOpacity style={styles.button2} onPress={removeImage}>
-                  <Text style={styles.buttonText2}>REMOVE</Text>
-                </TouchableOpacity>
-              ) : null}
-            </View>
+                  {imageUri ? null : (
+                    <Text style={styles.errorText}>This is a required!</Text>
+                  )}
+                </View>
 
-            <TouchableOpacity
-              onPress={handleSubmit}
-              title="Submit"
-              style={styles.button}>
-              <Text style={styles.buttonText}>NEXT</Text>
-            </TouchableOpacity>
-          </ScrollView>
+                <TouchableOpacity
+                  onPress={handleSubmit}
+                  title="Submit"
+                  style={styles.button}
+                >
+                  <Text style={styles.buttonText}>NEXT</Text>
+                </TouchableOpacity>
+              </View>
+            )}
+          />
         )}
       </Formik>
     </View>
@@ -151,10 +159,6 @@ const styles = StyleSheet.create({
   view: {
     flex: 1,
     marginHorizontal: 15,
-  },
-  headerText: {
-    color: '#000',
-    fontSize: 22,
   },
   input: {
     borderBottomWidth: 0.5,

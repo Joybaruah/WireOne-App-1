@@ -2,23 +2,28 @@ import {
   Alert,
   FlatList,
   Image,
-  ScrollView,
   StyleSheet,
   Text,
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, {useEffect, useState} from 'react';
-import {Formik} from 'formik';
-import {launchImageLibrary} from 'react-native-image-picker';
-import {useDispatch, useSelector} from 'react-redux';
-import {SelectStep3, setStep3} from '../redux/formSlice';
+import React, { useEffect, useState } from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { launchImageLibrary } from 'react-native-image-picker';
+import { useDispatch, useSelector } from 'react-redux';
 import PushNotification from 'react-native-push-notification';
-import FormInputs from '../form_inputs.json';
+import {
+  SelectStep1,
+  SelectStep2,
+  SelectStep3,
+  setStep3,
+} from '../redux/formSlice';
 
-const {form3_inputs} = FormInputs[2];
+const Form3 = ({ navigation }) => {
+  const step1 = useSelector(SelectStep1);
+  const step2 = useSelector(SelectStep2);
+  const step3 = useSelector(SelectStep3);
 
-const Form3 = ({navigation}) => {
   useEffect(() => {
     createChannels();
   }, []);
@@ -32,81 +37,104 @@ const Form3 = ({navigation}) => {
   const [image7, setImage7] = useState(null);
   const [image8, setImage8] = useState(null);
 
+  const form3 = [
+    {
+      label: '10th Certificate',
+      uri: image1,
+      key: 'image1',
+    },
+    {
+      label: '12th Certificate',
+      uri: image2,
+      key: 'image2',
+    },
+    {
+      label: 'Bachelor Certificate',
+      uri: image3,
+      key: 'image3',
+    },
+    {
+      label: 'Paslips- Previous Company (3 Months)',
+      uri: image4,
+      key: 'image4',
+    },
+    {
+      label: 'Any other qualification?',
+      uri: image5,
+      key: 'image5',
+    },
+    {
+      label: 'Reliving Letter- Previous Company',
+      uri: image6,
+      key: 'image6',
+    },
+    {
+      label: 'PAN CARD',
+      uri: image7,
+      key: 'image7',
+    },
+    {
+      label: 'AADHAR CARD',
+      uri: image8,
+      key: 'image8',
+    },
+  ];
+
   const dispatch = useDispatch();
 
-  const step3 = useSelector(SelectStep3);
-
-  // const uploadImage = uri => {
-  //   let options = {
-  //     mediaType: 'photo',
-  //     quality: 1,
-  //   };
-
-  //   switch (uri) {
-  //     case 'image1':
-  //       launchImageLibrary(options, response => {
-  //         setImage1(response.assets[0].uri);
-  //       });
-  //       break;
-  //     case 'image2':
-  //       launchImageLibrary(options, response => {
-  //         setImage2(response.assets[0].uri);
-  //       });
-  //       break;
-  //     case 'image3':
-  //       launchImageLibrary(options, response => {
-  //         setImage3(response.assets[0].uri);
-  //       });
-  //       break;
-  //     case 'image4':
-  //       launchImageLibrary(options, response => {
-  //         setImage4(response.assets[0].uri);
-  //       });
-  //       break;
-  //     case 'image5':
-  //       launchImageLibrary(options, response => {
-  //         setImage5(response.assets[0].uri);
-  //       });
-  //       break;
-  //     case 'image6':
-  //       launchImageLibrary(options, response => {
-  //         setImage6(response.assets[0].uri);
-  //       });
-  //       break;
-  //     case 'image7':
-  //       launchImageLibrary(options, response => {
-  //         setImage7(response.assets[0].uri);
-  //       });
-  //       break;
-  //     case 'image8':
-  //       launchImageLibrary(options, response => {
-  //         setImage8(response.assets[0].uri);
-  //       });
-  //       break;
-  //   }
-  // };
-
-  const uploadImage = id => {
-    let options = {
+  const uploadImage = (uri) => {
+    const options = {
       mediaType: 'photo',
       quality: 1,
     };
 
-    switch (id) {
+    // eslint-disable-next-line default-case
+    switch (uri) {
       case 'image1':
-        launchImageLibrary(options, response => {
+        launchImageLibrary(options, (response) => {
           setImage1(response.assets[0].uri);
         });
         break;
       case 'image2':
-        launchImageLibrary(options, response => {
+        launchImageLibrary(options, (response) => {
           setImage2(response.assets[0].uri);
+        });
+        break;
+      case 'image3':
+        launchImageLibrary(options, (response) => {
+          setImage3(response.assets[0].uri);
+        });
+        break;
+      case 'image4':
+        launchImageLibrary(options, (response) => {
+          setImage4(response.assets[0].uri);
+        });
+        break;
+      case 'image5':
+        launchImageLibrary(options, (response) => {
+          setImage5(response.assets[0].uri);
+        });
+        break;
+      case 'image6':
+        launchImageLibrary(options, (response) => {
+          setImage6(response.assets[0].uri);
+        });
+        break;
+      case 'image7':
+        launchImageLibrary(options, (response) => {
+          setImage7(response.assets[0].uri);
+        });
+        break;
+      case 'image8':
+        launchImageLibrary(options, (response) => {
+          setImage8(response.assets[0].uri);
         });
         break;
     }
   };
 
-  const removeImage = uri => {
+  const removeImage = (uri) => {
+    // eslint-disable-next-line default-case
     switch (uri) {
       case 'image1':
         setImage1(null);
@@ -142,7 +170,7 @@ const Form3 = ({navigation}) => {
     });
   };
 
-  const submitForm = () => {
+  const submitForm = async () => {
     dispatch(
       setStep3({
         images: {
@@ -159,26 +187,34 @@ const Form3 = ({navigation}) => {
     );
 
     if (
-      !image1 ||
-      !image2 ||
-      !image3 ||
-      !image4 ||
-      !image5 ||
-      !image6 ||
-      !image7 ||
-      !image8
+      !image1
+      || !image2
+      || !image3
+      || !image4
+      || !image5
+      || !image6
+      || !image7
+      || !image8
     ) {
       Alert.alert('Error', 'Upload all the Required Images!', [
-        {text: 'OK', onPress: () => console.log('OK Pressed')},
+        // eslint-disable-next-line no-console
+        { text: 'OK', onPress: () => console.log('OK Pressed') },
       ]);
     } else {
+      try {
+        const jsonValue = JSON.stringify({ step1, step2, step3 });
+        await AsyncStorage.setItem('formData', jsonValue);
+      } catch (e) {
+        // saving error
+      }
+
       PushNotification.localNotification({
         channelId: 'form-submit',
         title: 'Submitted',
         message: 'You have submited the Form',
       });
 
-      navigation.navigate('Step1');
+      navigation.navigate('form1');
     }
   };
 
@@ -187,48 +223,46 @@ const Form3 = ({navigation}) => {
       <View style={styles.header}>
         <Text style={styles.headerText}>Bank Details</Text>
       </View>
-          <ScrollView>
-            <FlatList
-              data={form3_inputs}
-              renderItem={({item}) => {
-                console.log(item)
-                return (
-                  <View style={styles.box}>
-                    <Text style={styles.label}>{item.label}</Text>
+      <FlatList
+        data={form3}
+        renderItem={({ item }) => (
+          <View style={styles.box}>
+            <Text style={styles.label}>{item.label}</Text>
 
-                    {image1 ? (
-                      <View style={{borderWidth: 0.5, marginVertical: 5}}>
-                        <Image source={{uri: image1}} style={{height: 50}} />
-                      </View>
-                    ) : (
-                      <TouchableOpacity
-                        style={styles.button2}
-                        onPress={() => uploadImage(item.key)}>
-                        <Text style={styles.buttonText2}>ADD FILE</Text>
-                      </TouchableOpacity>
-                    )}
+            {item.uri ? (
+              <View style={{ borderWidth: 0.5, marginVertical: 5 }}>
+                <Image source={{ uri: item.uri }} style={{ height: 50 }} />
+              </View>
+            ) : (
+              <TouchableOpacity
+                style={styles.button2}
+                onPress={() => uploadImage(item.key)}
+              >
+                <Text style={styles.buttonText2}>ADD FILE</Text>
+              </TouchableOpacity>
+            )}
 
-                    {image1 ? (
-                      <TouchableOpacity
-                        style={styles.button2}
-                        onPress={() => removeImage(item.key)}>
-                        <Text style={[styles.buttonText2, {color: 'red'}]}>
-                          REMOVE
-                        </Text>
-                      </TouchableOpacity>
-                    ) : null}
-                  </View>
-                );
-              }}
-            />
+            {item.uri ? (
+              <TouchableOpacity
+                style={styles.button2}
+                onPress={() => removeImage(item.key)}
+              >
+                <Text style={[styles.buttonText2, { color: 'red' }]}>
+                  REMOVE
+                </Text>
+              </TouchableOpacity>
+            ) : null}
+          </View>
+        )}
+      />
 
-            <TouchableOpacity
-              onPress={submitForm}
-              title="Submit"
-              style={styles.button}>
-              <Text style={styles.buttonText}>SUBMIT</Text>
-            </TouchableOpacity>
-          </ScrollView>
+      <TouchableOpacity
+        onPress={submitForm}
+        title="Submit"
+        style={styles.button}
+      >
+        <Text style={styles.buttonText}>SUBMIT</Text>
+      </TouchableOpacity>
     </View>
   );
 };
@@ -239,10 +273,6 @@ const styles = StyleSheet.create({
   view: {
     flex: 1,
     marginHorizontal: 15,
-  },
-  headerText: {
-    color: '#000',
-    fontSize: 22,
   },
   input: {
     borderBottomWidth: 0.5,
