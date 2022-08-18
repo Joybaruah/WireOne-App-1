@@ -6,8 +6,7 @@ import {
   View,
   FlatList,
 } from 'react-native';
-import React, { useEffect, useState } from 'react';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import React, { useState } from 'react';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 import SelectBox from 'react-native-multi-selectbox';
@@ -20,15 +19,19 @@ import FormInputs from '../form_inputs.json';
 const radioButtonsData = [
   {
     label: 'Male',
+    id: 1,
   },
   {
     label: 'Female',
+    id: 2,
   },
   {
     label: 'Prefer not to say',
+    id: 3,
   },
   {
     label: 'Other',
+    id: 4,
   },
 ];
 
@@ -79,25 +82,9 @@ const validationSchema = Yup.object().shape({
 const { form1Inputs } = FormInputs[0];
 
 // eslint-disable-next-line react/prop-types
-const Form1 = ({ navigation }) => {
+const FormInput = ({ navigation, localData }) => {
   const [selectedHobbies, setSelectedHobbies] = useState([]);
   const [genderState, setGenderState] = useState();
-  // eslint-disable-next-line no-unused-vars
-  const [localValues, setLocalValues] = useState(null);
-
-  useEffect(() => {
-    // eslint-disable-next-line consistent-return
-    const getData = async () => {
-      try {
-        const jsonValue = await AsyncStorage.getItem('formData');
-        return jsonValue != null ? setLocalValues(JSON.parse(jsonValue)) : null;
-      } catch (e) {
-        // error reading value
-      }
-    };
-    getData();
-  }, []);
-
   const dispatch = useDispatch();
 
   const onMultiChange = () => (item) => setSelectedHobbies(xorBy(selectedHobbies, [item], 'id'));
@@ -110,24 +97,28 @@ const Form1 = ({ navigation }) => {
   );
 
   const initialValues = {
-    email: '',
-    contact: '',
-    altContact: '',
-    fullname: '',
-    bloodGroup: '',
-    permAddress: '',
-    mailAddress: '',
-    panNumber: '',
-    aadharNum: '',
-    fatherName: '',
-    motherName: '',
-    emergerncyContact: '',
-    emergContactRelation: '',
-    medicalHistory: '',
+    email: localData ? localData.step1.step_1.email : '',
+    contact: localData ? localData.step1.step_1.contact : '',
+    altContact: localData ? localData.step1.step_1.altContact : '',
+    fullname: localData ? localData.step1.step_1.fullname : '',
+    bloodGroup: localData ? localData.step1.step_1.bloodGroup : '',
+    permAddress: localData ? localData.step1.step_1.permAddress : '',
+    mailAddress: localData ? localData.step1.step_1.mailAddress : '',
+    panNumber: localData ? localData.step1.step_1.panNumber : '',
+    aadharNum: localData ? localData.step1.step_1.aadharNum : '',
+    fatherName: localData ? localData.step1.step_1.fatherName : '',
+    motherName: localData ? localData.step1.step_1.motherName : '',
+    emergerncyContact: localData
+      ? localData.step1.step_1.emergerncyContact
+      : '',
+    emergContactRelation: localData
+      ? localData.step1.step_1.emergContactRelation
+      : '',
+    medicalHistory: localData ? localData.step1.step_1.medicalHistory : '',
   };
 
   return (
-    <View style={styles.view}>
+    <View style={styles.view} key={localData}>
       <Formik
         initialValues={initialValues}
         validationSchema={validationSchema}
@@ -178,7 +169,7 @@ const Form1 = ({ navigation }) => {
 
                   <RadioButtonRN
                     data={radioButtonsData}
-                    initial={4}
+                    initial={localData ? localData.step1.gender.id : 4}
                     circleSize={10}
                     selectedBtn={(e) => setGenderState(e)}
                   />
@@ -221,7 +212,7 @@ const Form1 = ({ navigation }) => {
   );
 };
 
-export default Form1;
+export default FormInput;
 
 const styles = StyleSheet.create({
   view: {

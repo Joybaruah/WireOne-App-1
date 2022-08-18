@@ -10,19 +10,13 @@ import {
 import React, { useEffect, useState } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { launchImageLibrary } from 'react-native-image-picker';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import PushNotification from 'react-native-push-notification';
-import {
-  SelectStep1,
-  SelectStep2,
-  SelectStep3,
-  setStep3,
-} from '../redux/formSlice';
+import { SelectStep1, SelectStep2 } from '../redux/formSlice';
 
-const Form3 = ({ navigation }) => {
+const Form3 = ({ navigation, localData }) => {
   const step1 = useSelector(SelectStep1);
   const step2 = useSelector(SelectStep2);
-  const step3 = useSelector(SelectStep3);
 
   useEffect(() => {
     createChannels();
@@ -40,47 +34,45 @@ const Form3 = ({ navigation }) => {
   const form3 = [
     {
       label: '10th Certificate',
-      uri: image1,
+      uri: localData ? localData.images.image1 : image1,
       key: 'image1',
     },
     {
       label: '12th Certificate',
-      uri: image2,
+      uri: localData ? localData.images.image2 : image2,
       key: 'image2',
     },
     {
       label: 'Bachelor Certificate',
-      uri: image3,
+      uri: localData ? localData.images.image3 : image3,
       key: 'image3',
     },
     {
       label: 'Paslips- Previous Company (3 Months)',
-      uri: image4,
+      uri: localData ? localData.images.image4 : image4,
       key: 'image4',
     },
     {
       label: 'Any other qualification?',
-      uri: image5,
+      uri: localData ? localData.images.image5 : image5,
       key: 'image5',
     },
     {
       label: 'Reliving Letter- Previous Company',
-      uri: image6,
+      uri: localData ? localData.images.image6 : image6,
       key: 'image6',
     },
     {
       label: 'PAN CARD',
-      uri: image7,
+      uri: localData ? localData.images.image7 : image7,
       key: 'image7',
     },
     {
       label: 'AADHAR CARD',
-      uri: image8,
+      uri: localData ? localData.images.image8 : image8,
       key: 'image8',
     },
   ];
-
-  const dispatch = useDispatch();
 
   const uploadImage = (uri) => {
     const options = {
@@ -171,21 +163,6 @@ const Form3 = ({ navigation }) => {
   };
 
   const submitForm = async () => {
-    dispatch(
-      setStep3({
-        images: {
-          image1,
-          image2,
-          image3,
-          image4,
-          image5,
-          image6,
-          image7,
-          image8,
-        },
-      }),
-    );
-
     if (
       !image1
       || !image2
@@ -202,7 +179,20 @@ const Form3 = ({ navigation }) => {
       ]);
     } else {
       try {
-        const jsonValue = JSON.stringify({ step1, step2, step3 });
+        const jsonValue = JSON.stringify({
+          step1,
+          step2,
+          images: {
+            image1,
+            image2,
+            image3,
+            image4,
+            image5,
+            image6,
+            image7,
+            image8,
+          },
+        });
         await AsyncStorage.setItem('formData', jsonValue);
       } catch (e) {
         // saving error

@@ -25,9 +25,8 @@ const validationSchema = Yup.object().shape({
 
 const { form2Inputs } = FormInputs[1];
 
-const Form2 = ({ navigation }) => {
+const Form2 = ({ navigation, localData }) => {
   const [imageUri, setImageUri] = useState(null);
-
   const uploadImage = () => {
     const options = {
       mediaType: 'photo',
@@ -39,6 +38,10 @@ const Form2 = ({ navigation }) => {
     });
   };
 
+  const chequeImage = {
+    uri: localData ? localData.step2.images.cheque : null,
+  };
+
   const removeImage = () => {
     setImageUri(null);
   };
@@ -46,17 +49,19 @@ const Form2 = ({ navigation }) => {
   const dispatch = useDispatch();
 
   return (
-    <View style={styles.view}>
+    <View style={styles.view} key={localData}>
       <View style={styles.header}>
         <Text style={styles.headerText}>Bank Details</Text>
       </View>
       <Formik
         initialValues={{
-          beneficiaryName: '',
-          accountNumber: '',
-          ifscCode: '',
-          bankName: '',
-          branchAddress: '',
+          beneficiaryName: localData
+            ? localData.step2.step_2.beneficiaryName
+            : '',
+          accountNumber: localData ? localData.step2.step_2.accountNumber : '',
+          ifscCode: localData ? localData.step2.step_2.ifscCode : '',
+          bankName: localData ? localData.step2.step_2.bankName : '',
+          branchAddress: localData ? localData.step2.step_2.branchAddress : '',
         }}
         validationSchema={validationSchema}
         onSubmit={(values) => {
@@ -108,10 +113,10 @@ const Form2 = ({ navigation }) => {
               <View>
                 <View style={styles.box}>
                   <Text style={styles.label}>Cancelled Cheque</Text>
-                  {imageUri ? (
+                  {chequeImage.uri ? (
                     <View style={{ borderWidth: 0.5, marginVertical: 5 }}>
                       <Image
-                        source={{ uri: imageUri }}
+                        source={{ uri: chequeImage.uri }}
                         style={{ height: 50 }}
                       />
                     </View>
@@ -123,7 +128,7 @@ const Form2 = ({ navigation }) => {
                       <Text style={styles.buttonText2}>ADD FILE</Text>
                     </TouchableOpacity>
                   )}
-                  {imageUri ? (
+                  {chequeImage.uri ? (
                     <TouchableOpacity
                       style={styles.button2}
                       onPress={removeImage}
@@ -132,7 +137,7 @@ const Form2 = ({ navigation }) => {
                     </TouchableOpacity>
                   ) : null}
 
-                  {imageUri ? null : (
+                  {chequeImage.uri ? null : (
                     <Text style={styles.errorText}>This is a required!</Text>
                   )}
                 </View>
