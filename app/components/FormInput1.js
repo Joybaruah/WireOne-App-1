@@ -180,7 +180,7 @@ const FormInput = ({ navigation, localData }) => {
                   title="Submit"
                   style={styles.button}
                 >
-                  <Text style={styles.buttonText}>NEXT</Text>
+                  <Text style={styles.buttonText}>NEXT U+2192.svg </Text>
                 </TouchableOpacity>
               </View>
             )}
