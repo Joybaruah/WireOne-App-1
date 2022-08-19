@@ -58,6 +58,9 @@ const K_OPTIONS = [
   },
 ];
 
+const panValue = /^([a-zA-Z]){5}([0-9]){4}([a-zA-Z]){1}?$/;
+const aadharValue = /^\d{4}\d{4}\d{4}$/;
+
 const validationSchema = Yup.object().shape({
   email: Yup.string()
     .email('Invalid email')
@@ -72,8 +75,12 @@ const validationSchema = Yup.object().shape({
   bloodGroup: Yup.string().required('This is a required question'),
   permAddress: Yup.string().required('This is a required question'),
   mailAddress: Yup.string().required('This is a required question'),
-  panNumber: Yup.string().required('This is a required question'),
-  aadharNum: Yup.string().required('This is a required question'),
+  panNumber: Yup.string()
+    .matches(panValue, 'Not a valid pan number')
+    .required('This is a required question'),
+  aadharNum: Yup.string()
+    .matches(aadharValue, 'Not a valid aadhar number')
+    .required('This is a required question'),
   fatherName: Yup.string().required('This is a required question'),
   motherName: Yup.string().required('This is a required question'),
   emergContactRelation: Yup.string().required('This is a required question'),
@@ -180,7 +187,7 @@ const FormInput = ({ navigation, localData }) => {
                   title="Submit"
                   style={styles.button}
                 >
-                  <Text style={styles.buttonText}>NEXT U+2192.svg </Text>
+                  <Text style={styles.buttonText}>NEXT</Text>
                 </TouchableOpacity>
               </View>
             )}

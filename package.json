@@ -19,6 +19,7 @@
     "radio-buttons-react-native": "^1.0.4",
     "react": "18.0.0",
     "react-native": "0.69.3",
+    "react-native-config": "^1.4.6",
     "react-native-image-picker": "^4.8.5",
     "react-native-multi-selectbox": "^1.5.0",
     "react-native-push-notification": "^8.1.1",
