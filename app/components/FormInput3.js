@@ -22,54 +22,67 @@ const Form3 = ({ navigation, localData }) => {
     createChannels();
   }, []);
 
-  const [image1, setImage1] = useState(null);
-  const [image2, setImage2] = useState(null);
-  const [image3, setImage3] = useState(null);
-  const [image4, setImage4] = useState(null);
-  const [image5, setImage5] = useState(null);
-  const [image6, setImage6] = useState(null);
-  const [image7, setImage7] = useState(null);
-  const [image8, setImage8] = useState(null);
+  useEffect(() => {
+    if (!localData) return;
+
+    setImage1(localData ? localData.images.image1 : null);
+    setImage2(localData ? localData.images.image2 : null);
+    setImage3(localData ? localData.images.image3 : null);
+    setImage4(localData ? localData.images.image4 : null);
+    setImage5(localData ? localData.images.image5 : null);
+    setImage6(localData ? localData.images.image6 : null);
+    setImage7(localData ? localData.images.image7 : null);
+    setImage8(localData ? localData.images.image8 : null);
+  }, [localData]);
+
+  const [image1, setImage1] = useState();
+  const [image2, setImage2] = useState();
+  const [image3, setImage3] = useState();
+  const [image4, setImage4] = useState();
+  const [image5, setImage5] = useState();
+  const [image6, setImage6] = useState();
+  const [image7, setImage7] = useState();
+  const [image8, setImage8] = useState();
 
   const form3 = [
     {
       label: '10th Certificate',
-      uri: localData ? localData.images.image1 : image1,
+      uri: image1,
       key: 'image1',
     },
     {
       label: '12th Certificate',
-      uri: localData ? localData.images.image2 : image2,
+      uri: image2,
       key: 'image2',
     },
     {
       label: 'Bachelor Certificate',
-      uri: localData ? localData.images.image3 : image3,
+      uri: image3,
       key: 'image3',
     },
     {
       label: 'Paslips- Previous Company (3 Months)',
-      uri: localData ? localData.images.image4 : image4,
+      uri: image4,
       key: 'image4',
     },
     {
       label: 'Any other qualification?',
-      uri: localData ? localData.images.image5 : image5,
+      uri: image5,
       key: 'image5',
     },
     {
       label: 'Reliving Letter- Previous Company',
-      uri: localData ? localData.images.image6 : image6,
+      uri: image6,
       key: 'image6',
     },
     {
       label: 'PAN CARD',
-      uri: localData ? localData.images.image7 : image7,
+      uri: image7,
       key: 'image7',
     },
     {
       label: 'AADHAR CARD',
-      uri: localData ? localData.images.image8 : image8,
+      uri: image8,
       key: 'image8',
     },
   ];

@@ -7,7 +7,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Formik } from 'formik';
 import { launchImageLibrary } from 'react-native-image-picker';
 import * as Yup from 'yup';
@@ -26,7 +26,8 @@ const validationSchema = Yup.object().shape({
 const { form2Inputs } = FormInputs[1];
 
 const Form2 = ({ navigation, localData }) => {
-  const [imageUri, setImageUri] = useState(null);
+  // const localChequeImage = localData ? localData.step2.images.cheque : null;
+  const [imageUri, setImageUri] = useState();
   const uploadImage = () => {
     const options = {
       mediaType: 'photo',
@@ -39,8 +40,12 @@ const Form2 = ({ navigation, localData }) => {
   };
 
   const chequeImage = {
-    uri: localData ? localData.step2.images.cheque : null,
+    uri: imageUri,
   };
+
+  useEffect(() => {
+    setImageUri(localData ? localData.step2.images.cheque : null);
+  }, [localData]);
 
   const removeImage = () => {
     setImageUri(null);

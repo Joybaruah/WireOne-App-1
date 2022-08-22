@@ -6,7 +6,7 @@ import {
   View,
   FlatList,
 } from 'react-native';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 import SelectBox from 'react-native-multi-selectbox';
@@ -90,6 +90,12 @@ const { form1Inputs } = FormInputs[0];
 
 // eslint-disable-next-line react/prop-types
 const FormInput = ({ navigation, localData }) => {
+  useEffect(() => {
+    if (!localData) return;
+    setSelectedHobbies(localDataHobbies);
+  }, [localData]);
+  // eslint-disable-next-line max-len
+  const localDataHobbies = localData ? localData.step1.hobbies : null;
   const [selectedHobbies, setSelectedHobbies] = useState([]);
   const [genderState, setGenderState] = useState();
   const dispatch = useDispatch();
@@ -157,17 +163,15 @@ const FormInput = ({ navigation, localData }) => {
                 <View style={styles.box}>
                   <Text style={styles.label}>Hobbies</Text>
 
-                  <View>
-                    <SelectBox
-                      listOptionProps={{ nestedScrollEnabled: true }}
-                      label="Select Hobbies"
-                      options={K_OPTIONS}
-                      selectedValues={selectedHobbies}
-                      onMultiSelect={onMultiChange()}
-                      onTapClose={onMultiChange()}
-                      isMulti
-                    />
-                  </View>
+                  <SelectBox
+                    listOptionProps={{ nestedScrollEnabled: true }}
+                    label="Select Hobbies"
+                    options={K_OPTIONS}
+                    selectedValues={selectedHobbies}
+                    onMultiSelect={onMultiChange()}
+                    onTapClose={onMultiChange()}
+                    isMulti
+                  />
                 </View>
 
                 {/* GENDER */}
